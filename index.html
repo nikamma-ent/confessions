@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinocchio — Confess</title>
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --crimson:       #650000;
+            --crimson-dark:  #400000;
+            --crimson-mid:   #520000;
+            --green:         #00AA00;
+            --green-bright:  #22DD22;
+            --cream:         #F2E8D9;
+            --cream-dim:     #B8A890;
+        }
+
+        body {
+            background-color: var(--crimson);
+            color: var(--cream);
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* SVG noise grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ── ORNAMENT DIVIDER ────────────────────────── */
+        .ahs {
+            height: 30px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 28'%3E%3Cpath d='M16 4C12 7 10 12 11 17C11.5 19 13 20 16 20C19 20 20.5 19 21 17C22 12 20 7 16 4Z' fill='%23520000'/%3E%3Cpath d='M16 7C11 9 7 14 8.5 19C9 20.5 10.5 20.5 11.5 19C13.5 16 14.5 11 16 7Z' fill='%23520000'/%3E%3Cpath d='M16 7C21 9 25 14 23.5 19C23 20.5 21.5 20.5 20.5 19C18.5 16 17.5 11 16 7Z' fill='%23520000'/%3E%3Cpath d='M16 19C16 22.5 14 25 11.5 25' fill='none' stroke='%23520000' stroke-width='1.1' stroke-linecap='round'/%3E%3Cpath d='M46 22C46 15 53 16 53 10C53 6.5 49.5 4.5 47.5 6.3' fill='none' stroke='%23520000' stroke-width='1.6' stroke-linecap='round'/%3E%3Ccircle cx='47.7' cy='6.2' r='1.7' fill='%23520000'/%3E%3Ccircle cx='46' cy='22.5' r='1.7' fill='%23520000'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-position: left center;
+            background-size: 72px 24px;
+            user-select: none;
+            border-top: 1px solid rgba(0,0,0,0.25);
+            border-bottom: 1px solid rgba(0,0,0,0.25);
+        }
+
+        /* ── HEADER ──────────────────────────────────── */
+        header {
+            text-align: center;
+            padding: 64px 24px 48px;
+        }
+
+        .album-title {
+            font-family: 'UnifrakturMaguntia', serif;
+            font-size: clamp(72px, 14vw, 136px);
+            color: var(--green);
+            line-height: 0.85;
+            text-shadow: 0 0 60px rgba(0, 180, 0, 0.25);
+            letter-spacing: -2px;
+        }
+
+        .artist-name {
+            font-family: 'UnifrakturMaguntia', serif;
+            font-size: clamp(16px, 3vw, 22px);
+            color: var(--crimson-dark);
+            margin-top: 16px;
+            letter-spacing: 3px;
+            color: rgba(242, 232, 217, 0.25);
+        }
+
+        /* ── INTRO ───────────────────────────────────── */
+        .intro {
+            max-width: 560px;
+            margin: 64px auto 56px;
+            padding: 0 28px;
+            text-align: center;
+        }
+
+        .intro-quote {
+            font-size: clamp(17px, 2.5vw, 22px);
+            font-style: italic;
+            color: var(--cream);
+            line-height: 1.55;
+        }
+
+        .intro-attr {
+            margin-top: 14px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: var(--cream-dim);
+        }
+
+        .intro-body {
+            margin-top: 28px;
+            font-size: 14px;
+            color: var(--cream-dim);
+            line-height: 1.8;
+        }
+
+        /* ── CONFESSION FORM ─────────────────────────── */
+        .form-section {
+            max-width: 660px;
+            margin: 0 auto;
+            padding: 56px 28px 48px;
+        }
+
+        .prompt {
+            font-family: 'UnifrakturMaguntia', serif;
+            font-size: clamp(24px, 4.5vw, 40px);
+            color: var(--green);
+            text-align: center;
+            margin-bottom: 48px;
+            line-height: 1.2;
+        }
+
+        .word-label {
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: var(--cream-dim);
+            text-align: center;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        .pills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .pill {
+            padding: 7px 20px;
+            border: 1px solid rgba(0, 170, 0, 0.35);
+            border-radius: 24px;
+            background: transparent;
+            color: var(--cream-dim);
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.18s;
+        }
+
+        .pill:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .pill.active {
+            background: var(--green);
+            border-color: var(--green);
+            color: var(--crimson-dark);
+            font-weight: 700;
+        }
+
+        .input-wrap {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 130px;
+            background: var(--crimson-dark);
+            border: 1px solid rgba(0, 170, 0, 0.25);
+            border-radius: 3px;
+            color: var(--cream);
+            font-family: 'Courier Prime', monospace;
+            font-size: 16px;
+            line-height: 1.75;
+            padding: 22px 20px;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea::placeholder {
+            color: rgba(242, 232, 217, 0.2);
+            font-style: italic;
+        }
+
+        textarea:focus {
+            border-color: rgba(0, 170, 0, 0.6);
+        }
+
+        .char-count {
+            position: absolute;
+            bottom: 12px;
+            right: 14px;
+            font-size: 11px;
+            color: var(--cream-dim);
+            opacity: 0.4;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 17px;
+            background: transparent;
+            border: 1px solid var(--green);
+            color: var(--green);
+            font-family: 'UnifrakturMaguntia', serif;
+            font-size: 24px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.18s;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: var(--green);
+            color: var(--crimson-dark);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        .success {
+            text-align: center;
+            font-size: 13px;
+            font-style: italic;
+            color: var(--green);
+            margin-top: 16px;
+            min-height: 20px;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .success.show { opacity: 1; }
+
+        /* ── WALL ────────────────────────────────────── */
+        .wall-section {
+            max-width: 900px;
+            margin: 60px auto 100px;
+            padding: 0 24px;
+        }
+
+        .wall-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            border-bottom: 1px solid rgba(0,0,0,0.3);
+            padding-bottom: 16px;
+        }
+
+        .wall-title {
+            font-family: 'UnifrakturMaguntia', serif;
+            font-size: 30px;
+            color: var(--green);
+        }
+
+        .wall-count {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--cream-dim);
+        }
+
+        .wall-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1px;
+            background: rgba(0,0,0,0.35);
+        }
+
+        .card {
+            background: var(--crimson-dark);
+            padding: 26px 22px;
+            transition: background 0.15s;
+        }
+
+        .card:hover {
+            background: #360000;
+        }
+
+        .card-tag {
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: var(--green);
+            opacity: 0.65;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-size: 14px;
+            line-height: 1.75;
+            color: var(--cream);
+            font-style: italic;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .card.new { animation: slideIn 0.45s ease forwards; }
+
+        /* ── FOOTER ──────────────────────────────────── */
+        footer {
+            text-align: center;
+            padding: 40px 20px 64px;
+            border-top: 1px solid rgba(0,0,0,0.3);
+        }
+
+        .release {
+            font-family: 'UnifrakturMaguntia', serif;
+            font-size: 20px;
+            color: var(--green);
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--cream-dim);
+            opacity: 0.4;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="ahs" role="presentation" aria-hidden="true"></div>
+
+<header>
+    <div class="album-title">Pinocchio</div>
+    <div class="artist-name">by Shashwat Bulusu</div>
+</header>
+
+<div class="ahs" role="presentation" aria-hidden="true"></div>
+
+<div class="intro">
+    <p class="intro-quote">"This album is my confession; it's a hard look at myself and my history to understand who I've become."</p>
+    <p class="intro-attr">— Shashwat Bulusu</p>
+    <p class="intro-body">
+        Pinocchio is an album about the lies we tell to survive —<br>
+        and how they hollow us out.<br><br>
+        What was yours?
+    </p>
+</div>
+
+<div class="form-section">
+    <h2 class="prompt">what lie did you tell to survive?</h2>
+
+    <p class="word-label">I was protecting my —</p>
+    <div class="pills">
+        <button class="pill" data-word="love"      onclick="selectWord(this)">love</button>
+        <button class="pill" data-word="pride"     onclick="selectWord(this)">pride</button>
+        <button class="pill" data-word="survival"  onclick="selectWord(this)">survival</button>
+        <button class="pill" data-word="childhood" onclick="selectWord(this)">childhood</button>
+        <button class="pill" data-word="nothing"   onclick="selectWord(this)">nothing</button>
+    </div>
+
+    <div class="input-wrap">
+        <textarea
+            id="confessionText"
+            placeholder="write it here. no one will know it's you."
+            maxlength="200"
+            oninput="updateCount(this)"
+        ></textarea>
+        <span class="char-count" id="charCount">200</span>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitConfession()">confess</button>
+    <p class="success" id="successMsg">your confession has been received.</p>
+</div>
+
+<div class="ahs" role="presentation" aria-hidden="true"></div>
+
+<div class="wall-section">
+    <div class="wall-header">
+        <h3 class="wall-title">confessions</h3>
+        <span class="wall-count" id="wallCount"></span>
+    </div>
+    <div class="wall-grid" id="wall"></div>
+</div>
+
+<footer>
+    <div class="release">August 21, 2026</div>
+    <p class="footer-note">Pinocchio &nbsp;·&nbsp; Shashwat Bulusu</p>
+</footer>
+
+<script>
+    // ─── API CONFIG ───────────────────────────────────────────────
+    // Set this to your deployed Vercel project's URL once you have it,
+    // e.g. 'https://pinocchio-confess.vercel.app/api/confessions'
+    const API_URL = 'YOUR_VERCEL_API_URL';
+    // ─────────────────────────────────────────────────────────────
+
+    let selectedWord = null;
+    let totalCount   = 0;
+
+    function makeCard(c, isNew) {
+        const div = document.createElement('div');
+        div.className = 'card' + (isNew ? ' new' : '');
+        const tag = c.word && c.word !== '—' ? c.word : '';
+        div.innerHTML = `
+            ${tag ? `<div class="card-tag">${tag}</div>` : ''}
+            <div class="card-text">"${escapeHtml(c.text)}"</div>
+        `;
+        return div;
+    }
+
+    function escapeHtml(str) {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function setWallCount(n) {
+        document.getElementById('wallCount').textContent = n + ' confession' + (n === 1 ? '' : 's');
+    }
+
+    function showStatus(msg, isError) {
+        const el = document.getElementById('successMsg');
+        el.textContent = msg;
+        el.style.color = isError ? '#ff6666' : 'var(--green)';
+        el.classList.add('show');
+        setTimeout(() => el.classList.remove('show'), 3500);
+    }
+
+    async function loadConfessions() {
+        const wall = document.getElementById('wall');
+        wall.innerHTML = '<div style="grid-column:1/-1;padding:24px;color:var(--cream-dim);font-style:italic;font-size:13px;">loading confessions...</div>';
+
+        try {
+            const res = await fetch(API_URL, { method: 'GET' });
+            if (!res.ok) throw new Error('bad response');
+            const { data, count } = await res.json();
+
+            wall.innerHTML = '';
+            totalCount = count ?? (data ? data.length : 0);
+            setWallCount(totalCount);
+            (data || []).forEach(c => wall.appendChild(makeCard(c, false)));
+        } catch (err) {
+            wall.innerHTML = '<div style="grid-column:1/-1;padding:24px;color:#ff6666;font-size:13px;">could not load confessions.</div>';
+        }
+    }
+
+    async function submitConfession() {
+        const text = document.getElementById('confessionText').value.trim();
+        if (!text) return;
+
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = 'confessing...';
+
+        let data;
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, word: selectedWord || null })
+            });
+            if (!res.ok) throw new Error('bad response');
+            ({ data } = await res.json());
+        } catch (err) {
+            btn.disabled = false;
+            btn.textContent = 'confess';
+            showStatus('something went wrong. try again.', true);
+            return;
+        }
+
+        btn.disabled = false;
+        btn.textContent = 'confess';
+
+        const wall = document.getElementById('wall');
+        wall.insertBefore(makeCard(data, true), wall.firstChild);
+        totalCount++;
+        setWallCount(totalCount);
+
+        document.getElementById('confessionText').value = '';
+        document.getElementById('charCount').textContent = '200';
+        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        selectedWord = null;
+
+        showStatus('your confession has been received.', false);
+    }
+
+    function selectWord(el) {
+        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+        selectedWord = el.dataset.word;
+    }
+
+    function updateCount(el) {
+        document.getElementById('charCount').textContent = 200 - el.value.length;
+    }
+
+    loadConfessions();
+</script>
+</body>
+</html>
