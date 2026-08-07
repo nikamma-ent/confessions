@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /confessions/{confessionId} {
+      allow read: if true;
+
+      allow create: if request.resource.data.keys().hasOnly(['text', 'word', 'created_at'])
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() > 0
+                    && request.resource.data.text.size() <= 200
+                    && (request.resource.data.word == null
+                        || request.resource.data.word in ['love', 'pride', 'survival', 'childhood', 'nothing'])
+                    && request.resource.data.created_at == request.time;
+
+      allow update, delete: if false;
+    }
+  }
+}

@@ -410,12 +410,29 @@
     <p class="footer-note">Pinocchio &nbsp;·&nbsp; Shashwat Bulusu</p>
 </footer>
 
-<script>
-    // ─── API CONFIG ───────────────────────────────────────────────
-    // Set this to your deployed Vercel project's URL once you have it,
-    // e.g. 'https://pinocchio-confess.vercel.app/api/confessions'
-    const API_URL = 'YOUR_VERCEL_API_URL';
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js';
+    import {
+        getFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp
+    } from 'https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js';
+
+    // ─── FIREBASE CONFIG ────────────────────────────────────────────
+    // Firebase Console → Project settings → General → Your apps → SDK setup and configuration
+    const firebaseConfig = {
+        apiKey: 'YOUR_FIREBASE_API_KEY',
+        authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+        projectId: 'YOUR_PROJECT_ID',
+        storageBucket: 'YOUR_PROJECT_ID.appspot.com',
+        messagingSenderId: 'YOUR_SENDER_ID',
+        appId: 'YOUR_APP_ID'
+    };
     // ─────────────────────────────────────────────────────────────
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+    const confessionsRef = collection(db, 'confessions');
+
+    const VALID_WORDS = ['love', 'pride', 'survival', 'childhood', 'nothing'];
 
     let selectedWord = null;
     let totalCount   = 0;
@@ -423,7 +440,7 @@
     function makeCard(c, isNew) {
         const div = document.createElement('div');
         div.className = 'card' + (isNew ? ' new' : '');
-        const tag = c.word && c.word !== '—' ? c.word : '';
+        const tag = c.word && VALID_WORDS.includes(c.word) ? c.word : '';
         div.innerHTML = `
             ${tag ? `<div class="card-tag">${tag}</div>` : ''}
             <div class="card-text">"${escapeHtml(c.text)}"</div>
@@ -456,14 +473,14 @@
         wall.innerHTML = '<div style="grid-column:1/-1;padding:24px;color:var(--cream-dim);font-style:italic;font-size:13px;">loading confessions...</div>';
 
         try {
-            const res = await fetch(API_URL, { method: 'GET' });
-            if (!res.ok) throw new Error('bad response');
-            const { data, count } = await res.json();
+            const q = query(confessionsRef, orderBy('created_at', 'desc'), limit(200));
+            const snap = await getDocs(q);
+            const data = snap.docs.map(d => d.data());
 
             wall.innerHTML = '';
-            totalCount = count ?? (data ? data.length : 0);
+            totalCount = data.length;
             setWallCount(totalCount);
-            (data || []).forEach(c => wall.appendChild(makeCard(c, false)));
+            data.forEach(c => wall.appendChild(makeCard(c, false)));
         } catch (err) {
             wall.innerHTML = '<div style="grid-column:1/-1;padding:24px;color:#ff6666;font-size:13px;">could not load confessions.</div>';
         }
@@ -471,21 +488,16 @@
 
     async function submitConfession() {
         const text = document.getElementById('confessionText').value.trim();
-        if (!text) return;
+        if (!text || text.length > 200) return;
 
         const btn = document.getElementById('submitBtn');
         btn.disabled = true;
         btn.textContent = 'confessing...';
 
-        let data;
+        const word = VALID_WORDS.includes(selectedWord) ? selectedWord : null;
+
         try {
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, word: selectedWord || null })
-            });
-            if (!res.ok) throw new Error('bad response');
-            ({ data } = await res.json());
+            await addDoc(confessionsRef, { text, word, created_at: serverTimestamp() });
         } catch (err) {
             btn.disabled = false;
             btn.textContent = 'confess';
@@ -497,7 +509,7 @@
         btn.textContent = 'confess';
 
         const wall = document.getElementById('wall');
-        wall.insertBefore(makeCard(data, true), wall.firstChild);
+        wall.insertBefore(makeCard({ text, word }, true), wall.firstChild);
         totalCount++;
         setWallCount(totalCount);
 
@@ -518,6 +530,12 @@
     function updateCount(el) {
         document.getElementById('charCount').textContent = 200 - el.value.length;
     }
+
+    // Module scripts don't expose top-level functions globally, but the
+    // markup above wires these up via inline onclick/oninput attributes.
+    window.selectWord = selectWord;
+    window.updateCount = updateCount;
+    window.submitConfession = submitConfession;
 
     loadConfessions();
 </script>
