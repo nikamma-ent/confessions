@@ -31,6 +31,14 @@
             font-display: swap;
         }
 
+        @font-face {
+            font-family: 'BodoniOrnaments';
+            src: url('fonts/BodoniOrnaments.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
         *, *::before, *::after {
             margin: 0;
             padding: 0;
@@ -69,12 +77,15 @@
 
         /* ── ORNAMENT DIVIDER ────────────────────────── */
         .ahs {
-            height: 30px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 28'%3E%3Cpath d='M16 4C12 7 10 12 11 17C11.5 19 13 20 16 20C19 20 20.5 19 21 17C22 12 20 7 16 4Z' fill='%23520000'/%3E%3Cpath d='M16 7C11 9 7 14 8.5 19C9 20.5 10.5 20.5 11.5 19C13.5 16 14.5 11 16 7Z' fill='%23520000'/%3E%3Cpath d='M16 7C21 9 25 14 23.5 19C23 20.5 21.5 20.5 20.5 19C18.5 16 17.5 11 16 7Z' fill='%23520000'/%3E%3Cpath d='M16 19C16 22.5 14 25 11.5 25' fill='none' stroke='%23520000' stroke-width='1.1' stroke-linecap='round'/%3E%3Cpath d='M46 22C46 15 53 16 53 10C53 6.5 49.5 4.5 47.5 6.3' fill='none' stroke='%23520000' stroke-width='1.6' stroke-linecap='round'/%3E%3Ccircle cx='47.7' cy='6.2' r='1.7' fill='%23520000'/%3E%3Ccircle cx='46' cy='22.5' r='1.7' fill='%23520000'/%3E%3C/svg%3E");
-            background-repeat: repeat-x;
-            background-position: left center;
-            background-size: 72px 24px;
+            text-align: center;
+            color: var(--crimson-mid);
+            font-family: 'BodoniOrnaments';
+            font-size: 22px;
+            letter-spacing: 16px;
+            padding: 14px 0;
             user-select: none;
+            white-space: nowrap;
+            overflow: hidden;
             border-top: 1px solid rgba(0,0,0,0.25);
             border-bottom: 1px solid rgba(0,0,0,0.25);
         }
@@ -364,14 +375,14 @@
 </head>
 <body>
 
-<div class="ahs" role="presentation" aria-hidden="true"></div>
+<div class="ahs" role="presentation" aria-hidden="true">c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u</div>
 
 <header>
     <div class="album-title">Pinocchio</div>
     <div class="artist-name">by Shashwat Bulusu</div>
 </header>
 
-<div class="ahs" role="presentation" aria-hidden="true"></div>
+<div class="ahs" role="presentation" aria-hidden="true">c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u</div>
 
 <div class="intro">
     <p class="intro-quote">"This album is my confession; it's a hard look at myself and my history to understand who I've become."</p>
@@ -407,7 +418,7 @@
     <p class="success" id="successMsg">your confession has been received.</p>
 </div>
 
-<div class="ahs" role="presentation" aria-hidden="true"></div>
+<div class="ahs" role="presentation" aria-hidden="true">c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u c u</div>
 
 <div class="wall-section">
     <div class="wall-header">
