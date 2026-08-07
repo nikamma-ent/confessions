@@ -4,8 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pinocchio — Confess</title>
-    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'Qordhion';
+            src: url('fonts/Qordhion.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Migra';
+            src: url('fonts/Migra-ExtraLight.otf') format('opentype');
+            font-weight: 200;
+            font-style: normal;
+            font-display: swap;
+        }
+
         *, *::before, *::after {
             margin: 0;
             padding: 0;
@@ -25,7 +40,7 @@
         body {
             background-color: var(--crimson);
             color: var(--cream);
-            font-family: 'Courier Prime', 'Courier New', monospace;
+            font-family: 'Migra', serif;
             font-size: 16px;
             line-height: 1.6;
             overflow-x: hidden;
@@ -61,7 +76,7 @@
         }
 
         .album-title {
-            font-family: 'UnifrakturMaguntia', serif;
+            font-family: 'Qordhion', serif;
             font-size: clamp(72px, 14vw, 136px);
             color: var(--green);
             line-height: 0.85;
@@ -70,7 +85,7 @@
         }
 
         .artist-name {
-            font-family: 'UnifrakturMaguntia', serif;
+            font-family: 'Qordhion', serif;
             font-size: clamp(16px, 3vw, 22px);
             color: var(--crimson-dark);
             margin-top: 16px;
@@ -115,7 +130,7 @@
         }
 
         .prompt {
-            font-family: 'UnifrakturMaguntia', serif;
+            font-family: 'Qordhion', serif;
             font-size: clamp(24px, 4.5vw, 40px);
             color: var(--green);
             text-align: center;
@@ -146,7 +161,7 @@
             border-radius: 24px;
             background: transparent;
             color: var(--cream-dim);
-            font-family: 'Courier Prime', monospace;
+            font-family: 'Migra', serif;
             font-size: 13px;
             letter-spacing: 1px;
             cursor: pointer;
@@ -177,7 +192,7 @@
             border: 1px solid rgba(0, 170, 0, 0.25);
             border-radius: 3px;
             color: var(--cream);
-            font-family: 'Courier Prime', monospace;
+            font-family: 'Migra', serif;
             font-size: 16px;
             line-height: 1.75;
             padding: 22px 20px;
@@ -211,7 +226,7 @@
             background: transparent;
             border: 1px solid var(--green);
             color: var(--green);
-            font-family: 'UnifrakturMaguntia', serif;
+            font-family: 'Qordhion', serif;
             font-size: 24px;
             letter-spacing: 3px;
             cursor: pointer;
@@ -259,7 +274,7 @@
         }
 
         .wall-title {
-            font-family: 'UnifrakturMaguntia', serif;
+            font-family: 'Qordhion', serif;
             font-size: 30px;
             color: var(--green);
         }
@@ -318,7 +333,7 @@
         }
 
         .release {
-            font-family: 'UnifrakturMaguntia', serif;
+            font-family: 'Qordhion', serif;
             font-size: 20px;
             color: var(--green);
             letter-spacing: 4px;
