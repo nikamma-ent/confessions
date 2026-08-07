@@ -23,6 +23,14 @@
             font-display: swap;
         }
 
+        @font-face {
+            font-family: 'MigraRegular';
+            src: url('fonts/Migra-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
         *, *::before, *::after {
             margin: 0;
             padding: 0;
@@ -335,10 +343,14 @@
         }
 
         .release {
-            font-family: 'Migra', serif;
+            font-family: 'Qordhion', serif;
             font-size: 20px;
             color: var(--green);
             letter-spacing: 4px;
+        }
+
+        .release-num {
+            font-family: 'MigraRegular', serif;
         }
 
         .footer-note {
@@ -408,7 +420,7 @@
 </div>
 
 <footer>
-    <div class="release">August 21, 2026</div>
+    <div class="release">August <span class="release-num">21, 2026</span></div>
     <p class="footer-note">Pinocchio &nbsp;·&nbsp; Shashwat Bulusu</p>
 </footer>
 
