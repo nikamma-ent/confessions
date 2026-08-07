@@ -9,7 +9,7 @@ service cloud.firestore {
                     && request.resource.data.text.size() > 0
                     && request.resource.data.text.size() <= 200
                     && (request.resource.data.word == null
-                        || request.resource.data.word in ['love', 'pride', 'survival', 'childhood', 'nothing'])
+                        || request.resource.data.word in ['love', 'pride', 'survival', 'childhood'])
                     && request.resource.data.created_at == request.time;
 
       allow update, delete: if false;
